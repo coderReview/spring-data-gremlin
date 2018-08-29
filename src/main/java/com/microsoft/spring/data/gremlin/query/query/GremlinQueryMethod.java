@@ -56,7 +56,8 @@ public class GremlinQueryMethod extends QueryMethod {
     }
 
     /**
-     * Returns the query string declared in a {@link Query} annotation or {@literal null} if neither the annotation found
+     * Returns the query string declared in a {@link Query} annotation or {@literal null}
+     * if neither the annotation found
      * nor the attribute was specified.
      *
      * @return

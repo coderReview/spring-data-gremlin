@@ -22,7 +22,7 @@ public abstract class AbstractGremlinQuery implements RepositoryQuery {
         this.operations = operations;
     }
 
-    protected abstract GremlinQuery createQuery(GremlinParameterAccessor accessor);
+    protected abstract Object createQuery(GremlinParameterAccessor accessor);
 
     protected boolean isDeleteQuery() {
         // panli: always return false as only take care find in one PR.
@@ -33,11 +33,15 @@ public abstract class AbstractGremlinQuery implements RepositoryQuery {
     public Object execute(@NonNull Object[] parameters) {
         final GremlinParameterAccessor accessor = new GremlinParametersParameterAccessor(this.method, parameters);
 
-        final GremlinQuery query = this.createQuery(accessor);
+        final Object query = this.createQuery(accessor);
         final ResultProcessor processor = method.getResultProcessor().withDynamicProjection(accessor);
         final GremlinQueryExecution execution = this.getExecution();
 
-        return execution.execute(query, processor.getReturnedType().getDomainType());
+        if (query instanceof GremlinQuery) {
+            return execution.execute((GremlinQuery) query, processor.getReturnedType().getDomainType());
+        } else {
+            return execution.execute((String) query, processor.getReturnedType().getDomainType());
+        }
     }
 
     @Override

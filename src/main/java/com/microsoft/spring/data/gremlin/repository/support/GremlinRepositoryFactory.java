@@ -58,7 +58,7 @@ public class GremlinRepositoryFactory extends RepositoryFactorySupport {
 
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
-                                                                    EvaluationContextProvider provider) {
+                                                                   EvaluationContextProvider provider) {
         return Optional.of(new GremlinQueryLookupStrategy(this.operations, provider));
     }
 
@@ -77,17 +77,18 @@ public class GremlinRepositoryFactory extends RepositoryFactorySupport {
         public RepositoryQuery resolveQuery(@NonNull Method method, RepositoryMetadata metadata,
                                             ProjectionFactory factory, NamedQueries namedQueries) {
             final GremlinQueryMethod queryMethod = new GremlinQueryMethod(method, metadata, factory);
-            String namedQueryName = queryMethod.getNamedQueryName();
+            final String namedQueryName = queryMethod.getNamedQueryName();
 
             Assert.notNull(queryMethod, "queryMethod should not be null");
             Assert.notNull(this.operations, "operations should not be null");
 
             if (namedQueries.hasQuery(namedQueryName)) {
-                String namedQuery = namedQueries.getQuery(namedQueryName);
+                final String namedQuery = namedQueries.getQuery(namedQueryName);
                 return new StringBasedGremlinQuery(namedQuery, queryMethod, operations, EXPRESSION_PARSER,
                         evaluationContextProvider);
             } else if (queryMethod.hasAnnotatedQuery()) {
-                return new StringBasedGremlinQuery(queryMethod, operations, EXPRESSION_PARSER, evaluationContextProvider);
+                return new StringBasedGremlinQuery(queryMethod, operations, EXPRESSION_PARSER,
+                        evaluationContextProvider);
             } else {
                 return new PartTreeGremlinQuery(queryMethod, this.operations);
             }

@@ -11,6 +11,8 @@ import org.springframework.lang.NonNull;
 public interface GremlinQueryExecution {
     Object execute(GremlinQuery query, Class<?> type);
 
+    Object execute(String query, Class<?> type);
+
     final class FindExecution implements GremlinQueryExecution {
 
         private final GremlinOperations operations;
@@ -21,6 +23,11 @@ public interface GremlinQueryExecution {
 
         @Override
         public Object execute(@NonNull GremlinQuery query, @NonNull Class<?> type) {
+            return this.operations.find(query, type);
+        }
+
+        @Override
+        public Object execute(@NonNull String query, @NonNull Class<?> type) {
             return this.operations.find(query, type);
         }
     }

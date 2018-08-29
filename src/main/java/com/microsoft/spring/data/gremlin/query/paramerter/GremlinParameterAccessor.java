@@ -8,4 +8,5 @@ package com.microsoft.spring.data.gremlin.query.paramerter;
 import org.springframework.data.repository.query.ParameterAccessor;
 
 public interface GremlinParameterAccessor extends ParameterAccessor {
+    Object[] getValues();
 }

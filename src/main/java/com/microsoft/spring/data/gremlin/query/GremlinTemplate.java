@@ -40,6 +40,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletionException;
 
@@ -369,6 +370,22 @@ public class GremlinTemplate implements GremlinOperations, ApplicationContextAwa
         query.setScriptGenerator(new QueryFindScriptGenerator());
 
         final List<String> queryList = query.doSentenceGenerate(domainClass);
+        final List<Result> results = this.executeQuery(queryList);
+
+        if (results.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return this.recoverDomainList(source, results, domainClass, info.isEntityEdge());
+    }
+
+    @Override
+    public <T> List<T> find(@NonNull String query, @NonNull Class<T> domainClass) {
+        @SuppressWarnings("unchecked") final GremlinEntityInformation info = new GremlinEntityInformation(domainClass);
+        final GremlinSource source = info.getGremlinSource();
+
+        final List<String> queryList = new ArrayList<>();
+        queryList.add(query);
         final List<Result> results = this.executeQuery(queryList);
 
         if (results.isEmpty()) {

@@ -11,7 +11,15 @@ import org.springframework.data.repository.query.ParametersParameterAccessor;
 public class GremlinParametersParameterAccessor extends ParametersParameterAccessor
         implements GremlinParameterAccessor {
 
+    private Object[] values;
+
     public GremlinParametersParameterAccessor(GremlinQueryMethod method, Object[] values) {
         super(method.getParameters(), values);
+        this.values = values;
+    }
+
+    @Override
+    public Object[] getValues() {
+        return values;
     }
 }
